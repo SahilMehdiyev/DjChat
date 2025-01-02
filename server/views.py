@@ -1,19 +1,18 @@
-from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework.generics import ListAPIView
+from rest_framework.response import Response
 from .models import Server
 from .serializers import ServerSerializer
-from rest_framework.response import Response
 
 
 
-class ServerListViewSet(viewsets.ViewSet):
-    
+
+class ServerListAPIView(ListAPIView):
     queryset = Server.objects.all()
-    
-    def list(self,request):
-        category = request.query_params.get('category')
+    serializer_class = ServerSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category = self.request.query_params.get('category')
         if category:
-            self.queryset.filter(category=category)
-        serializer = ServerSerializer(self.queryset, many=True)
-        return Response(serializer.data)
-                
+            queryset = queryset.filter(category=category)
+        return queryset
