@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError,AuthenticationFailed
 from .models import Server
 from .serializers import ServerSerializer
 
@@ -13,6 +13,9 @@ class ServerListAPIView(APIView):
         by_serverid = request.query_params.get("by_serverid")
 
         queryset = Server.objects.all()
+        
+        if by_user or by_serverid and not request.user.is_authenticated:
+            raise AuthenticationFailed()
 
         if by_serverid:
             try:
