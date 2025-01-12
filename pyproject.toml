@@ -5,6 +5,11 @@ description = ""
 authors = ["SahilMehdiyev <branchsahil@gmail.com>"]
 readme = "README.md"
 
+packages = [
+    { include = "server" }
+]
+
+
 [tool.poetry.dependencies]
 python = "^3.12"
 django = "^5.1.4"

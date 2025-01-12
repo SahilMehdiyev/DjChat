@@ -11,6 +11,7 @@ class ServerListAPIView(APIView):
         qty = request.query_params.get("qty")
         by_user = request.query_params.get("by_user") == "true"
         by_serverid = request.query_params.get("by_serverid")
+        with_num_members = request.query_params.get("with_num_members") == "true"
 
         queryset = Server.objects.all()
         
@@ -34,6 +35,10 @@ class ServerListAPIView(APIView):
 
         if by_user:
             queryset = queryset.filter(member__id=request.user.id)
+            
+        if with_num_members:
+            queryset = queryset.annotate(num_members=Count('member'))
+            
 
         if qty:
             try:
